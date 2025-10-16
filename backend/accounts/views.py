@@ -4,8 +4,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
-from django.shortcuts import render
 from .serializers import (
     UserRegistrationSerializer, 
     UserLoginSerializer, 
@@ -16,7 +14,7 @@ from .serializers import (
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-    """用户注册"""
+    """user registration"""
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -31,7 +29,7 @@ def register(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def user_login(request):
-    """用户登录"""
+    """user login"""
     serializer = UserLoginSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.validated_data['user']
@@ -47,7 +45,7 @@ def user_login(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def user_logout(request):
-    """用户登出"""
+    """user logout"""
     try:
         request.user.auth_token.delete()
     except:
@@ -58,7 +56,7 @@ def user_logout(request):
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
-    """获取/更新用户信息"""
+    """get/update user profile"""
     if request.method == 'GET':
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
@@ -76,11 +74,10 @@ def user_profile(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
-    """修改密码"""
+    """change password"""
     serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
-        # 删除旧的 token，强制重新登录
         try:
             request.user.auth_token.delete()
         except:
@@ -91,7 +88,7 @@ def change_password(request):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_account(request):
-    """删除账户"""
+    """delete account"""
     user = request.user
     user.delete()
     return Response({'message': 'Account deleted successfully'})
@@ -99,7 +96,7 @@ def delete_account(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def check_auth(request):
-    """检查用户认证状态"""
+    """check user authentication status"""
     return Response({
         'authenticated': True,
         'user': UserSerializer(request.user).data

@@ -28,6 +28,7 @@ function HomePage() {
           },
         });
       } catch (error) {
+        console.error("Login failed:", error);
         console.log('Logout request failed, but continue to clear local data');
       }
     }

@@ -26,14 +26,15 @@ function Login() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setMessage(`Login successful! Welcome ${data.user.username}`);
-        // Can redirect to homepage or other pages here
+        // Redirect to tracker page after successful login
         setTimeout(() => {
-          window.location.href = '/';
+          window.location.href = '/tracker';
         }, 1000);
       } else {
         setMessage(`Login failed: ${data.error || data.message || 'Invalid username or password'}`);
       }
     } catch (error) {
+      console.error("Network error:", error);
       setMessage('Network error, please check if backend is running');
     }
   };
@@ -78,13 +79,14 @@ function Login() {
         setMessage(`Registration failed: ${JSON.stringify(data)}`);
       }
     } catch (error) {
+      console.error("Network error:", error);
       setMessage('Network error, please check if backend is running');
     }
   };
 
-  const handleForgotPassword = () => {
-    setMessage("Forgot password feature not implemented yet");
-  };
+  // const handleForgotPassword = () => {
+  //   setMessage("Forgot password feature not implemented yet");
+  // };
 
   return (
     <div className="login-container">
@@ -122,7 +124,7 @@ function Login() {
       <div className="button-group">
         <button className="login-btn" onClick={handleLogin}>Login</button>
         <button className="register-btn" onClick={handleRegister}>SignUp</button>
-        <button className="forgot-btn" onClick={handleForgotPassword}>Forget Password?</button>
+        {/* <button className="forgot-btn" onClick={handleForgotPassword}>Forget Password?</button> */}
       </div>
     </div>
   );

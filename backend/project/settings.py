@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'api',  
     'applications',
     'accounts',
+
+    
 ]
 
 REST_FRAMEWORK = {
@@ -54,6 +56,7 @@ REST_FRAMEWORK = {
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 MIDDLEWARE = [
+    
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

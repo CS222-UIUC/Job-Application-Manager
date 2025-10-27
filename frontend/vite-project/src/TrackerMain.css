@@ -200,6 +200,134 @@ h1 {
   background-color: #c82333;
 }
 
+/* Message styling */
+.message {
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 1px solid;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+/* Applications section */
+.applications-section {
+  margin: 60px 0;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.applications-section h2 {
+  font-size: 32px;
+  margin-bottom: 40px;
+  color: #333;
+  text-align: left;
+}
+
+.applications-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.application-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.application-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.app-header h3 {
+  margin: 0;
+  color: #007bff;
+  font-size: 18px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-applied {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-oa {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.status-interview {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.status-offer {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.status-rejected {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.application-card p {
+  margin: 10px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.application-card a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.application-card a:hover {
+  text-decoration: underline;
+}
+
+.no-apps {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px dashed #ddd;
+}
+
 /* Responsive design for mobile */
 @media (max-width: 768px) {
   .tracker-container {

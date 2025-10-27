@@ -1,63 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import './TrackerMain.css';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./TrackerMain.css";
 
 function TrackerMain() {
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
-    company: '',
-    position: '',
-    link: '',
-    type: '',
-    time: '',
-    status: ''
+    company: "",
+    position: "",
+    link: "",
+    type: "",
+    time: "",
+    status: "",
   });
 
   useEffect(() => {
     // Check if there is a logged in user
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
   }, []);
 
   const handleLogout = async () => {
-    const token = localStorage.getItem('token');
-    
+    const token = localStorage.getItem("token");
+
     if (token) {
       try {
-        await fetch('http://localhost:8000/accounts/logout/', {
-          method: 'POST',
+        await fetch("http://localhost:8000/accounts/logout/", {
+          method: "POST",
           headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
           },
         });
       } catch (error) {
         console.error("Login failed:", error);
-        console.log('Logout request failed, but continue to clear local data');
+        console.log("Logout request failed, but continue to clear local data");
       }
     }
-    
+
     // Clear local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
     // TODO: call backend api to store those data
   };
 
@@ -67,21 +67,23 @@ function TrackerMain() {
       <div className="header-section">
         <div className="title-group">
           <h1>Job Application Tracker</h1>
-          <p className="subtitle">Track your job applications and their progress</p>
+          <p className="subtitle">
+            Track your job applications and their progress
+          </p>
         </div>
-        
+
         {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <span>Welcome, {user.username}!</span>
-            <button 
+            <button
               onClick={handleLogout}
               style={{
-                padding: '10px 20px',
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
+                padding: "10px 20px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
               }}
             >
               Logout
@@ -98,7 +100,7 @@ function TrackerMain() {
       <div className="main-content">
         <div className="form-section">
           <h2>Add New Application</h2>
-          
+
           <form onSubmit={handleSubmit} className="application-form">
             <div className="form-row">
               <div className="form-group">

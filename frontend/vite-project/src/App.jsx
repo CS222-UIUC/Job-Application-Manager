@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage.jsx';
 import Login from './Login.jsx';
 import TrackerMain from './TrackerMain.jsx';
+import Profile from './Profile.jsx';
 
 function App() {
 	return (
@@ -10,6 +11,7 @@ function App() {
 				<Route path="/" element={<HomePage />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/tracker" element={<TrackerMain />} />
+				<Route path="/profile" element={<Profile />} />
 			</Routes>
 		</BrowserRouter>
 	);

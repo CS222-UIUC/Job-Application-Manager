@@ -26,9 +26,6 @@ urlpatterns = [
     path("api/applications/create/", create_application, name="application-create"),
     path("api/", include("api.urls")),
     path("accounts/", include("accounts.urls")),
-<<<<<<< HEAD
+
 ]
-=======
-    path("api/applications/", include("applications.urls")),
-]
->>>>>>> 50ba53588e1a87fb00805b17f1345ec046ecbd13
+

@@ -37,20 +37,9 @@ def create_application(request):
             applied_at=request.data.get("time"),
         )
 
-        # prepare data to return to frontend
-        response_data = {
-            "id": application.id,
-            "company": company.name,
-            "position": job.title,
-            "link": company.website,
-            "type": request.data.get("type"),
-            "time": application.applied_at,
-            "status": application.status,
-            "created_at": application.created_at,
-        }
-
-        return Response(response_data, status=status.HTTP_201_CREATED)
-
+        # prepare data to return to frontend using serializer for consistency
+        serializer = ApplicationSerializer(application)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response(
             {"error": str(e), "message": "Failed to create application"},

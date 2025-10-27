@@ -28,7 +28,7 @@ function TrackerMain() {
 
   const fetchApplications = async (token) => {
     try {
-      const response = await fetch("http://localhost:8000/applications/", {
+      const response = await fetch("http://localhost:8000/api/applications/jobs/", {
         method: "GET",
         headers: {
           Authorization: `Token ${token}`,
@@ -86,7 +86,7 @@ function TrackerMain() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/applications/create/",
+        "http://localhost:8000/api/applications/jobs/create/",
         {
           method: "POST",
           headers: {

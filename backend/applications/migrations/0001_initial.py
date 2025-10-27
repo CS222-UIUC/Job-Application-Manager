@@ -8,37 +8,66 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Company',
+            name="Company",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=150, unique=True)),
-                ('website', models.URLField(blank=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=150, unique=True)),
+                ("website", models.URLField(blank=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Job',
+            name="Job",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('title', models.CharField(max_length=150)),
-                ('location', models.CharField(blank=True, max_length=150)),
-                ('status', models.CharField(choices=[('started', 'Started'), ('oa', 'Online Assessment'), ('Interview', 'Interview'), ('rejected', 'Rejected'), ('accepted', 'Accepted')], default='started', max_length=20)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='jobs', to='applications.company')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("title", models.CharField(max_length=150)),
+                ("location", models.CharField(blank=True, max_length=150)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("started", "Started"),
+                            ("oa", "Online Assessment"),
+                            ("Interview", "Interview"),
+                            ("rejected", "Rejected"),
+                            ("accepted", "Accepted"),
+                        ],
+                        default="started",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "company",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="jobs",
+                        to="applications.company",
+                    ),
+                ),
             ],
             options={
-                'indexes': [models.Index(fields=['status'], name='application_status_2cfdeb_idx')],
-                'unique_together': {('company', 'title')},
+                "indexes": [models.Index(fields=["status"], name="application_status_2cfdeb_idx")],
+                "unique_together": {("company", "title")},
             },
         ),
     ]

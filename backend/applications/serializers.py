@@ -13,6 +13,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = "__all__"
+        read_only_fields = ["id", "user", "created_at", "updated_at"]
 
     def validate(self, attrs):
         # do not ban
@@ -25,16 +26,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
                 )
         return attrs
 
-# new version, match the frontend data format
-class JobApplicationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = JobApplication
-        fields = [
-            'id', 'company', 'position', 'link', 'type', 
-            'time', 'status', 'created_at', 'updated_at'
-        ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
-    
     def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user
+        validated_data["user"] = self.context["request"].user
         return super().create(validated_data)

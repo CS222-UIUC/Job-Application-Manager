@@ -1,9 +1,8 @@
+from django.urls import path
 
+from . import views
 
-from rest_framework.routers import DefaultRouter
-from .views import ApplicationViewSet
-
-router = DefaultRouter()
-router.register(r"applications", ApplicationViewSet, basename="application")
-urlpatterns = router.urls
-
+urlpatterns = [
+    path("", views.get_applications, name="get_applications"),
+    path("create/", views.create_application, name="create_application"),
+]

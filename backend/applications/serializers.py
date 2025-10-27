@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from .models import Application
+
 
 class ApplicationSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -15,7 +17,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
             request = self.context["request"]
             job = attrs.get("job")
             if job and Application.objects.filter(user=request.user, job=job).exists():
-                raise serializers.ValidationError({"job": "You already created an application for this job."})
+                raise serializers.ValidationError(
+                    {"job": "You already created an application for this job."}
+                )
         return attrs
 
     def create(self, validated_data):

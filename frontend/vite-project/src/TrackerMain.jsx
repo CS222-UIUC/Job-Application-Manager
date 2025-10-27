@@ -5,6 +5,8 @@ import "./TrackerMain.css";
 function TrackerMain() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     company: "",
     position: "",
@@ -15,14 +17,36 @@ function TrackerMain() {
   });
 
   useEffect(() => {
-    // Check if there is a logged in user
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
     if (token && userData) {
       setUser(JSON.parse(userData));
+      fetchApplications(token);
     }
   }, []);
+
+  const fetchApplications = async (token) => {
+    try {
+      const response = await fetch("http://localhost:8000/api/applications/", {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch applications");
+      }
+
+      const data = await response.json();
+      setApplications(data);
+    } catch (error) {
+      console.error("Error fetching applications:", error);
+      setMessage("Failed to load applications");
+    }
+  };
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
@@ -56,10 +80,43 @@ function TrackerMain() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // TODO: call backend api to store those data
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/applications/create/",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create application");
+      }
+
+      const newApp = await response.json();
+      setApplications([...applications, newApp]);
+      setFormData({
+        company: "",
+        position: "",
+        link: "",
+        type: "",
+        time: "",
+        status: "",
+      });
+      setMessage("Application created successfully");
+      setTimeout(() => setMessage(""), 3000);
+    } catch (error) {
+      console.error("Error creating application:", error);
+      setMessage("Failed to create application");
+    }
   };
 
   return (
@@ -94,6 +151,19 @@ function TrackerMain() {
           </Link>
         )}
       </div>
+
+      {/* Message display */}
+      {message && (
+        <div
+          className={`message ${
+            message.includes("Failed") || message.includes("failed")
+              ? "error"
+              : "success"
+          }`}
+        >
+          {message}
+        </div>
+      )}
 
       {/* Main content - Application Form */}
       <div className="main-content">
@@ -194,6 +264,50 @@ function TrackerMain() {
               </button>
             </div>
           </form>
+        </div>
+
+        {/* Applications List */}
+        <div className="applications-section">
+          <h2>Your Applications</h2>
+          {applications.length > 0 ? (
+            <div className="applications-list">
+              {applications.map((app, index) => (
+                <div key={index} className="application-card">
+                  <div className="app-header">
+                    <h3>{app.company}</h3>
+                    <span className={`status-badge status-${app.status}`}>
+                      {app.status}
+                    </span>
+                  </div>
+                  <p className="position">
+                    <strong>Position:</strong> {app.position}
+                  </p>
+                  {app.link && (
+                    <p className="link">
+                      <strong>Link:</strong>{" "}
+                      <a
+                        href={app.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {app.link}
+                      </a>
+                    </p>
+                  )}
+                  <p className="type">
+                    <strong>Type:</strong> {app.type}
+                  </p>
+                  <p className="date">
+                    <strong>Date:</strong> {app.time}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="no-apps">
+              No applications yet. Add one above to get started!
+            </p>
+          )}
         </div>
       </div>
     </div>

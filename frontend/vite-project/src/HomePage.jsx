@@ -1,41 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import './HomePage.css';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./HomePage.css";
 
 function HomePage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     // Check if there is a logged in user
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
   }, []);
 
   const handleLogout = async () => {
-    const token = localStorage.getItem('token');
-    
+    const token = localStorage.getItem("token");
+
     if (token) {
       try {
-        await fetch('http://localhost:8000/accounts/logout/', {
-          method: 'POST',
+        await fetch("http://localhost:8000/accounts/logout/", {
+          method: "POST",
           headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
           },
         });
       } catch (error) {
         console.error("Login failed:", error);
-        console.log('Logout request failed, but continue to clear local data');
+        console.log("Logout request failed, but continue to clear local data");
       }
     }
-    
+
     // Clear local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   };
 
@@ -45,21 +45,23 @@ function HomePage() {
       <div className="header-section">
         <div className="title-group">
           <h1>Job Application Tracker</h1>
-          <p className="subtitle">Keep track of all your job applications in one place</p>
+          <p className="subtitle">
+            Keep track of all your job applications in one place
+          </p>
         </div>
-        
+
         {user ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <span>Welcome, {user.username}!</span>
-            <button 
+            <button
               onClick={handleLogout}
               style={{
-                padding: '10px 20px',
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
+                padding: "10px 20px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
               }}
             >
               Logout
@@ -80,17 +82,25 @@ function HomePage() {
           <div className="feature-cards">
             <div className="feature-card">
               <h3>Track Applications</h3>
-              <p>Manage all your job applications and their status in one dashboard</p>
+              <p>
+                Manage all your job applications and their status in one
+                dashboard
+              </p>
             </div>
 
             <div className="feature-card">
               <h3>AI Recommendations</h3>
-              <p>Get personalized skill suggestions based on your applied positions</p>
+              <p>
+                Get personalized skill suggestions based on your applied
+                positions
+              </p>
             </div>
 
             <div className="feature-card">
               <h3>Practice Problems</h3>
-              <p>Access recommended LeetCode problems to prepare for interviews</p>
+              <p>
+                Access recommended LeetCode problems to prepare for interviews
+              </p>
             </div>
 
             <div className="feature-card">

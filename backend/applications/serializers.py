@@ -1,23 +1,23 @@
 from rest_framework import serializers
-
 from .models import Application
 
-
 class ApplicationSerializer(serializers.ModelSerializer):
-    company_name = serializers.CharField(source="job.company.name", read_only=True)
-    position = serializers.CharField(source="job.title", read_only=True)
-    company_website = serializers.CharField(source="job.company.website", read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Application
-        fields = [
-            "id",
-            "status",
-            "applied_at",
-            "created_at",
-            "updated_at",
-            "company_name",
-            "position",
-            "company_website",
-        ]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        fields = "__all__"
+        read_only_fields = ["id", "user", "created_at", "updated_at"]
+
+    def validate(self, attrs):
+        # do not ban
+        if self.instance is None:
+            request = self.context["request"]
+            job = attrs.get("job")
+            if job and Application.objects.filter(user=request.user, job=job).exists():
+                raise serializers.ValidationError({"job": "You already created an application for this job."})
+        return attrs
+
+    def create(self, validated_data):
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)

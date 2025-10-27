@@ -5,6 +5,10 @@ from .models import Application
 
 class ApplicationSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    company_name = serializers.CharField(source="job.company.name", read_only=True)
+    position = serializers.CharField(source="job.title", read_only=True)
+    company_website = serializers.CharField(source="job.company.website", read_only=True)
+    type = serializers.CharField(source="job.type", read_only=True)
 
     class Meta:
         model = Application

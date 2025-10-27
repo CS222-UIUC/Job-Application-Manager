@@ -274,7 +274,7 @@ function TrackerMain() {
               {applications.map((app, index) => (
                 <div key={index} className="application-card">
                   <div className="app-header">
-                    <h3>{app.company}</h3>
+                    <h3>{app.company_name}</h3>
                     <span className={`status-badge status-${app.status}`}>
                       {app.status}
                     </span>
@@ -282,15 +282,15 @@ function TrackerMain() {
                   <p className="position">
                     <strong>Position:</strong> {app.position}
                   </p>
-                  {app.link && (
+                  {app.company_website && (
                     <p className="link">
                       <strong>Link:</strong>{" "}
                       <a
-                        href={app.link}
+                        href={app.company_website}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {app.link}
+                        {app.company_website}
                       </a>
                     </p>
                   )}

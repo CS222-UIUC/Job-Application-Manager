@@ -161,7 +161,11 @@ function Profile() {
     <div className="profile-container">
       <div className="profile-header">
         <div className="header-left">
-          <button className="return-btn" onClick={() => navigate(-1)} aria-label="Go back to previous page">
+          <button
+            className="return-btn"
+            onClick={() => navigate(-1)}
+            aria-label="Go back to previous page"
+          >
             ← Return
           </button>
           <h1>User Profile</h1>

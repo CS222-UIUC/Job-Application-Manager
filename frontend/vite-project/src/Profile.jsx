@@ -13,6 +13,7 @@ function Profile() {
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -62,6 +63,47 @@ function Profile() {
     }));
   };
 
+  const handleResumeChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setResumeFile(file);
+    }
+  };
+
+  const handleUploadResume = async () => {
+    if (!resumeFile) {
+      setMessage("Please select a file first");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const formDataForUpload = new FormData();
+    formDataForUpload.append("resume", resumeFile);
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/accounts/upload-resume/",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+          body: formDataForUpload,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to upload resume");
+      }
+
+      setMessage("Resume uploaded successfully");
+      setResumeFile(null);
+    } catch (error) {
+      setMessage("Failed to upload resume");
+      console.error("Error uploading resume:", error);
+    }
+  };
+
   const handleSave = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -79,9 +121,10 @@ function Profile() {
       }
 
       const data = await response.json();
-      setUser(data);
+      setUser(data.user || data);
       setIsEditing(false);
       setMessage("Profile updated successfully");
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       setMessage("Failed to update profile");
       console.error("Error updating profile:", error);
@@ -123,7 +166,17 @@ function Profile() {
         </button>
       </div>
 
-      {message && <div className="message">{message}</div>}
+      {message && (
+        <div
+          className={`message ${
+            message.includes("Failed") || message.includes("failed")
+              ? "error"
+              : "success"
+          }`}
+        >
+          {message}
+        </div>
+      )}
 
       <div className="profile-content">
         {!isEditing ? (
@@ -143,6 +196,18 @@ function Profile() {
             <div className="info-row">
               <span className="label">Email:</span>
               <span className="value">{user?.email || "-"}</span>
+            </div>
+            <div className="resume-section">
+              <h3>Resume Upload</h3>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleResumeChange}
+                className="resume-input"
+              />
+              <button className="upload-btn" onClick={handleUploadResume}>
+                Upload Resume
+              </button>
             </div>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>
               Edit Profile

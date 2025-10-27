@@ -252,7 +252,7 @@ function TrackerMain() {
                   <option value="applied">Applied</option>
                   <option value="oa">OA</option>
                   <option value="interview">Interview</option>
-                  <option value="offer">Offer</option>
+                  <option value="offer">Offerred</option>
                   <option value="rejected">Rejected</option>
                 </select>
               </div>

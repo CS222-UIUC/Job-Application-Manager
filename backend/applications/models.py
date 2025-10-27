@@ -3,8 +3,8 @@ from django.conf import settings
 
 
 class TimeStamped(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)  # created time
-    updated_at = models.DateTimeField(auto_now=True)      # last updated time
+    created_at = models.DateTimeField(auto_now_add=True)  
+    updated_at = models.DateTimeField(auto_now=True)      # updated time
     class Meta:
         abstract = True
 
@@ -21,17 +21,17 @@ class Company(TimeStamped):
 class Job(TimeStamped):
     company = models.ForeignKey(
         Company,
-        on_delete=models.CASCADE, # when company deleted, delete all its jobs
-        related_name='jobs', # company.jobs to access all jobs of a company
+        on_delete=models.CASCADE, 
+        related_name='jobs', 
     )
     title = models.CharField(max_length=150)
     class Meta:
-        unique_together = [('company', 'title')] # same company can't have duplicate job titles
+        unique_together = [('company', 'title')] 
     def __str__(self):
         return f'{self.title} @ {self.company}'
 
 
-# application chart (user's application to a job) 
+
 class Application(TimeStamped):
     class Status(models.TextChoices):
         STARTED = "started", "Started"

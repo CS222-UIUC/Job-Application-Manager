@@ -8,12 +8,13 @@ from .serializers import ApplicationSerializer, JobApplicationSerializer
 
 @api_view(["GET"])
 def get_applications(request):
-    apps = Application.objects.all()
-    serializer = ApplicationSerializer(apps, many=True)
-    return Response(serializer.data)
+    u = request.user
+    qs = Application.objects.all() if (u.is_staff or u.is_superuser) else Application.objects.filter(user=u)
+    data = ApplicationSerializer(qs, many=True).data
+    return Response(data)
 
-
-@api_view(["POST"])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_application(request):
     serializer = ApplicationSerializer(data=request.data)
     if serializer.is_valid():

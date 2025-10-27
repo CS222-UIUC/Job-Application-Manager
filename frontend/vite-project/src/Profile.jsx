@@ -160,7 +160,12 @@ function Profile() {
   return (
     <div className="profile-container">
       <div className="profile-header">
-        <h1>User Profile</h1>
+        <div className="header-left">
+          <button className="return-btn" onClick={() => navigate(-1)}>
+            ← Return
+          </button>
+          <h1>User Profile</h1>
+        </div>
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>

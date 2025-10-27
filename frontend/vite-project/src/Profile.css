@@ -12,6 +12,28 @@
   margin-bottom: 40px;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.return-btn {
+  padding: 10px 15px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+
+.return-btn:hover {
+  background-color: #5a6268;
+}
+
 .profile-header h1 {
   color: #333;
   font-size: 36px;

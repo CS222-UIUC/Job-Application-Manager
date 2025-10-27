@@ -166,7 +166,17 @@ function Profile() {
         </button>
       </div>
 
-      {message && <div className="message">{message}</div>}
+      {message && (
+        <div
+          className={`message ${
+            message.includes("Failed") || message.includes("failed")
+              ? "error"
+              : "success"
+          }`}
+        >
+          {message}
+        </div>
+      )}
 
       <div className="profile-content">
         {!isEditing ? (

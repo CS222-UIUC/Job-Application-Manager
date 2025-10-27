@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./TrackerMain.css";
 
 function TrackerMain() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     company: "",
@@ -73,19 +74,17 @@ function TrackerMain() {
         </div>
 
         {user ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-            <span>Welcome, {user.username}!</span>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
+          <div className="user-profile-section">
+            <div
+              className="profile-widget"
+              onClick={() => navigate("/profile")}
             >
+              <div className="profile-avatar">
+                {user.username.charAt(0).toUpperCase()}
+              </div>
+              <span className="profile-username">{user.username}</span>
+            </div>
+            <button onClick={handleLogout} className="logout-btn">
               Logout
             </button>
           </div>

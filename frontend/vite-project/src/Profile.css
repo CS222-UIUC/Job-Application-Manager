@@ -159,6 +159,46 @@
   background-color: #5a6268;
 }
 
+.resume-section {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+.resume-section h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.resume-input {
+  display: block;
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.upload-btn {
+  padding: 10px 20px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.upload-btn:hover {
+  background-color: #138496;
+}
+
 @media (max-width: 768px) {
   .profile-container {
     padding-top: 40px;

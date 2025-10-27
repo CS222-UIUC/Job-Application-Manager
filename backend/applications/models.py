@@ -52,4 +52,38 @@ class Application(TimeStamped):
             models.Index(fields=['user', 'status']),
         ]
 
-    def __str__(self): return f'{self.user} → {self.job} ({self.status})'
+    def __str__(self):
+        return f"{self.user} → {self.job} ({self.status})"
+
+
+# new version, match the frontend data format
+class JobApplication(TimeStamped):
+    class Status(models.TextChoices):
+        APPLIED = "applied", "Applied"
+        OA = "oa", "OA"
+        INTERVIEW = "interview", "Interview"
+        OFFER = "offer", "Offer"
+        REJECTED = "rejected", "Rejected"
+
+    class Type(models.TextChoices):
+        FULLTIME = "fulltime", "Full Time"
+        INTERN = "intern", "Intern"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="job_applications"
+    )
+    company = models.CharField(max_length=150)
+    position = models.CharField(max_length=150)
+    link = models.URLField(blank=True, null=True)
+    type = models.CharField(max_length=20, choices=Type.choices, default=Type.FULLTIME)
+    time = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.APPLIED)
+
+    class Meta:
+        unique_together = [("user", "company", "position")]
+        indexes = [
+            models.Index(fields=["user", "status"]),
+        ]
+
+    def __str__(self):
+        return f"{self.user} → {self.company} - {self.position} ({self.status})"

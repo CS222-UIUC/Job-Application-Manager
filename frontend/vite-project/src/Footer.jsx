@@ -1,11 +1,9 @@
-
 function Footer() {
-
-    return (
-        <footer>
-            <p>&copy; {new Date().getFullYear()}  My Website. All rights reserved.</p>
-        </footer>
-    );
+  return (
+    <footer>
+      <p>&copy; {new Date().getFullYear()} My Website. All rights reserved.</p>
+    </footer>
+  );
 }
 
-export default Footer
+export default Footer;

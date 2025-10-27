@@ -1,54 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Profile.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Profile.css";
 
 function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
+    first_name: "",
+    last_name: "",
+    email: "",
   });
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     loadProfile();
   }, [navigate]);
 
   const loadProfile = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/accounts/profile/', {
-        method: 'GET',
+      const response = await fetch("http://localhost:8000/accounts/profile/", {
+        method: "GET",
         headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
         },
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch profile');
+        throw new Error("Failed to fetch profile");
       }
 
       const data = await response.json();
       setUser(data);
       setFormData({
-        first_name: data.first_name || '',
-        last_name: data.last_name || '',
-        email: data.email || '',
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
       });
     } catch (error) {
-      setMessage('Failed to load profile');
-      console.error('Error loading profile:', error);
+      setMessage("Failed to load profile");
+      console.error("Error loading profile:", error);
     } finally {
       setLoading(false);
     }
@@ -56,65 +56,71 @@ function Profile() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSave = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch('http://localhost:8000/accounts/profile/', {
-        method: 'PUT',
+      const response = await fetch("http://localhost:8000/accounts/profile/", {
+        method: "PUT",
         headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
 
       const data = await response.json();
       setUser(data);
       setIsEditing(false);
-      setMessage('Profile updated successfully');
+      setMessage("Profile updated successfully");
     } catch (error) {
-      setMessage('Failed to update profile');
-      console.error('Error updating profile:', error);
+      setMessage("Failed to update profile");
+      console.error("Error updating profile:", error);
     }
   };
 
   const handleLogout = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
-      await fetch('http://localhost:8000/accounts/logout/', {
-        method: 'POST',
+      await fetch("http://localhost:8000/accounts/logout/", {
+        method: "POST",
         headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
         },
       });
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   if (loading) {
-    return <div className="profile-container"><p>Loading...</p></div>;
+    return (
+      <div className="profile-container">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   return (
     <div className="profile-container">
       <div className="profile-header">
         <h1>User Profile</h1>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
       {message && <div className="message">{message}</div>}
@@ -128,17 +134,19 @@ function Profile() {
             </div>
             <div className="info-row">
               <span className="label">First Name:</span>
-              <span className="value">{user?.first_name || '-'}</span>
+              <span className="value">{user?.first_name || "-"}</span>
             </div>
             <div className="info-row">
               <span className="label">Last Name:</span>
-              <span className="value">{user?.last_name || '-'}</span>
+              <span className="value">{user?.last_name || "-"}</span>
             </div>
             <div className="info-row">
               <span className="label">Email:</span>
-              <span className="value">{user?.email || '-'}</span>
+              <span className="value">{user?.email || "-"}</span>
             </div>
-            <button className="edit-btn" onClick={() => setIsEditing(true)}>Edit Profile</button>
+            <button className="edit-btn" onClick={() => setIsEditing(true)}>
+              Edit Profile
+            </button>
           </div>
         ) : (
           <div className="profile-edit">
@@ -173,8 +181,15 @@ function Profile() {
               />
             </div>
             <div className="button-group">
-              <button className="save-btn" onClick={handleSave}>Save</button>
-              <button className="cancel-btn" onClick={() => setIsEditing(false)}>Cancel</button>
+              <button className="save-btn" onClick={handleSave}>
+                Save
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         )}

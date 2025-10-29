@@ -1,7 +1,11 @@
+import os
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+
+from .models import UserProfile
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -74,3 +78,18 @@ class PasswordChangeSerializer(serializers.Serializer):
         user.set_password(self.validated_data["new_password"])
         user.save()
         return user
+
+
+class ResumeUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["resume"]
+
+    def validate_resume(self, f):
+        # only pdf
+        if not f.name.lower().endswith(".pdf"):
+            raise serializers.ValidationError("only PDF files are allowed")
+        # size limit (5MB)
+        if f.size > 5 * 1024 * 1024:
+            raise serializers.ValidationError("File size must not exceed 5MB")
+        return f

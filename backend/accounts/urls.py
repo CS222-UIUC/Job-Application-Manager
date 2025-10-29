@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
 from . import views
@@ -14,4 +16,6 @@ urlpatterns = [
     path("get-resume/", views.get_resume, name="get_resume"),
     path("upload-resume/", views.post_resume, name="upload_resume"),
     path("delete-resume/", views.delete_resume, name="delete_resume"),
-]
+] + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+)  # for development

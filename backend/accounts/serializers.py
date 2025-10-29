@@ -80,7 +80,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         return user
 
 
-class ResumeUploadSerializer(serializers.ModelSerializer):
+class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ["resume"]

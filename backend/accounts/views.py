@@ -1,12 +1,15 @@
 from django.contrib.auth import login, logout
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from .models import UserProfile
 from .serializers import (
     PasswordChangeSerializer,
+    ResumeSerializer,
     UserLoginSerializer,
     UserRegistrationSerializer,
     UserSerializer,
@@ -104,3 +107,42 @@ def delete_account(request):
 def check_auth(request):
     """check user authentication status"""
     return Response({"authenticated": True, "user": UserSerializer(request.user).data})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_resume(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    return Response(
+        {
+            "has_resume": bool(profile.resume),
+            "resume_url": (
+                request.build_absolute_uri(profile.resume.url) if profile.resume else None
+            ),
+            "uploaded_at": profile.resume_uploaded_at,
+        }
+    )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def post_resume(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    serializer = ResumeSerializer(instance=profile, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    profile.resume_uploaded_at = timezone.now()
+    profile.save(update_fields=["resume_uploaded_at"])
+    return Response({"message": "Upload successful"}, status=status.HTTP_201_CREATED)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_resume(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    if profile.resume:
+        profile.resume.delete(save=False)
+        profile.resume = None
+        profile.resume_uploaded_at = None
+        profile.save(update_fields=["resume", "resume_uploaded_at"])
+    return Response(status=status.HTTP_204_NO_CONTENT)

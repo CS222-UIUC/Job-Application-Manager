@@ -53,6 +53,9 @@ REST_FRAMEWORK = {
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",

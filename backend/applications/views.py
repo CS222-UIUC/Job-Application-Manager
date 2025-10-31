@@ -43,3 +43,24 @@ def create_application(request):
             {"error": str(e), "message": "Failed to create application"},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_application(request, pk):
+    try:
+        application = Application.objects.get(pk=pk, user=request.user)
+        application.delete()
+        return Response(
+            {"message": "Application deleted successfully"}, status=status.HTTP_204_NO_CONTENT
+        )
+    except Application.DoesNotExist:
+        return Response(
+            {"error": "Application not found or you don't have permission to delete it"},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    except Exception as e:
+        return Response(
+            {"error": str(e), "message": "Failed to delete application"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

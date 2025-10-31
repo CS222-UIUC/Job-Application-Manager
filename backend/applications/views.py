@@ -51,9 +51,7 @@ def delete_application(request, pk):
     try:
         application = Application.objects.get(pk=pk, user=request.user)
         application.delete()
-        return Response(
-            {"message": "Application deleted successfully"}, status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
     except Application.DoesNotExist:
         return Response(
             {"error": "Application not found or you don't have permission to delete it"},

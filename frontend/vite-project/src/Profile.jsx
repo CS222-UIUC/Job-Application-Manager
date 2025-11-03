@@ -14,6 +14,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [resumeFile, setResumeFile] = useState(null);
+  const [resumeInfo, setResumeInfo] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -47,11 +48,34 @@ function Profile() {
         last_name: data.last_name || "",
         email: data.email || "",
       });
+      
+      // 加载简历信息
+      loadResumeInfo();
     } catch (error) {
       setMessage("Failed to load profile");
       console.error("Error loading profile:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadResumeInfo = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://localhost:8000/accounts/get-resume/", {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setResumeInfo(data);
+      }
+    } catch (error) {
+      console.error("Error loading resume info:", error);
     }
   };
 
@@ -98,9 +122,17 @@ function Profile() {
 
       setMessage("Resume uploaded successfully");
       setResumeFile(null);
+      await loadResumeInfo();
+      setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       setMessage("Failed to upload resume");
       console.error("Error uploading resume:", error);
+    }
+  };
+
+  const handleViewResume = () => {
+    if (resumeInfo?.resume_url) {
+      window.open(resumeInfo.resume_url, "_blank");
     }
   };
 
@@ -208,6 +240,19 @@ function Profile() {
             </div>
             <div className="resume-section">
               <h3>Resume Upload</h3>
+              {resumeInfo?.has_resume && (
+                <div className="resume-info">
+                  <p className="resume-status">✓ Resume uploaded</p>
+                  {resumeInfo.uploaded_at && (
+                    <p className="resume-date">
+                      Uploaded: {new Date(resumeInfo.uploaded_at).toLocaleDateString()}
+                    </p>
+                  )}
+                  <button className="view-resume-btn" onClick={handleViewResume}>
+                    View Resume
+                  </button>
+                </div>
+              )}
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
@@ -215,7 +260,7 @@ function Profile() {
                 className="resume-input"
               />
               <button className="upload-btn" onClick={handleUploadResume}>
-                Upload Resume
+                {resumeInfo?.has_resume ? "Update Resume" : "Upload Resume"}
               </button>
             </div>
             <button className="edit-btn" onClick={() => setIsEditing(true)}>

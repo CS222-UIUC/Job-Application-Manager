@@ -231,6 +231,42 @@
   background-color: #138496;
 }
 
+.resume-info {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #e8f5e9;
+  border-radius: 6px;
+  border: 1px solid #c3e6cb;
+}
+
+.resume-status {
+  margin: 0 0 8px 0;
+  color: #155724;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.resume-date {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.view-resume-btn {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.view-resume-btn:hover {
+  background-color: #218838;
+}
+
 @media (max-width: 768px) {
   .profile-container {
     padding-top: 40px;

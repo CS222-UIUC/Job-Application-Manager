@@ -54,7 +54,6 @@ class Application(TimeStamped):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name="applications")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.STARTED)
     applied_at = models.DateTimeField(null=True, blank=True)
-    deadline_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = [("user", "job")]

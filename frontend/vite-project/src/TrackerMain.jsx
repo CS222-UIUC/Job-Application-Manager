@@ -132,6 +132,12 @@ function TrackerMain() {
 
         {user ? (
           <div className="user-profile-section">
+            <button
+              onClick={() => navigate("/chat-ai")}
+              className="chat-ai-btn"
+            >
+              Chat with AI
+            </button>
             <div
               className="profile-widget"
               onClick={() => navigate("/profile")}

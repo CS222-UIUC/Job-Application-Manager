@@ -7,3 +7,9 @@ black
 pytest
 pytest-django
 openai
+requests
+beautifulsoup4
+playwright
+lxml
+openai
+python-dotenv

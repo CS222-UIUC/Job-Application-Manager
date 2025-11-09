@@ -6,3 +6,7 @@ ruff
 black
 pytest
 pytest-django
+requests
+beautifulsoup4
+playwright
+lxml

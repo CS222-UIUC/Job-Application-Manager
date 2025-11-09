@@ -6,6 +6,8 @@ function ChatAI() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [_error, setError] = useState("");
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -18,7 +20,7 @@ function ChatAI() {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage = {
       id: Date.now(),
@@ -28,18 +30,55 @@ function ChatAI() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const userInput = inputValue;
     setInputValue("");
+    setIsLoading(true);
+    setError("");
 
-    // Simulate AI response (currently returns test message)
-    setTimeout(() => {
+    try {
+      const conversationHistory = messages.slice(-10).map((msg) => ({
+        role: msg.sender === "user" ? "user" : "assistant",
+        content: msg.text,
+      }));
+
+      const response = await fetch("http://localhost:8000/api/chat/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userInput,
+          conversation_history: conversationHistory,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to get AI response");
+      }
+
       const aiMessage = {
         id: Date.now() + 1,
-        text: "testing message, waiting for backend api",
+        text: data.response,
         sender: "ai",
         timestamp: new Date().toLocaleTimeString(),
       };
+
       setMessages((prev) => [...prev, aiMessage]);
-    }, 500);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setError(error.message || "Failed to get AI response");
+      const errorMessage = {
+        id: Date.now() + 1,
+        text: `Error: ${error.message || "Failed to get AI response. Please check if the backend is running and OpenAI API key is configured."}`,
+        sender: "ai",
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,7 +94,10 @@ function ChatAI() {
         {messages.length === 0 ? (
           <div className="welcome-message">
             <p>👋 Hello! I'm your AI assistant. How can I help you?</p>
-            <p className="hint">The backend API is still under development. All replies are test messages.</p>
+            <p className="hint">
+              Ask me about job search, resume advice, interview preparation, or
+              career guidance.
+            </p>
           </div>
         ) : (
           messages.map((message) => (
@@ -70,6 +112,13 @@ function ChatAI() {
             </div>
           ))
         )}
+        {isLoading && (
+          <div className="message ai-message">
+            <div className="message-content">
+              <p>Thinking...</p>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -80,9 +129,10 @@ function ChatAI() {
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Type a message..."
           className="chat-input"
+          disabled={isLoading}
         />
-        <button type="submit" className="send-btn">
-          Send
+        <button type="submit" className="send-btn" disabled={isLoading}>
+          {isLoading ? "Sending..." : "Send"}
         </button>
       </form>
     </div>
@@ -90,4 +140,3 @@ function ChatAI() {
 }
 
 export default ChatAI;
-

@@ -6,3 +6,4 @@ ruff
 black
 pytest
 pytest-django
+openai

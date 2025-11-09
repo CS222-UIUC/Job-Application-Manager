@@ -6,8 +6,12 @@ Enhanced extractor.py
 Supports: iCIMS, Workday, Greenhouse, Ashby, Lever, SmartRecruiters, BambooHR, etc.
 """
 
+import json
+import os
+
 import requests
 from bs4 import BeautifulSoup
+from openai import OpenAI
 from playwright.sync_api import sync_playwright
 
 DEFAULT_HEADERS = {
@@ -110,6 +114,54 @@ def extract_jd_text(url: str) -> str:
 
     print("Extracted via Playwright")
     return text
+
+
+def analyze_jd(jd_text: str) -> dict:
+    prompt = f"""
+    You are a recruiting assistant. Read the job description and extract specific, concrete skills.
+    Follow these rules:
+
+    - Extract only explicitly mentioned skills (languages, frameworks, libraries, tools, platforms, cloud services, databases, devops, testing, security, data/AI, analytics, ML ops, hardware, embedded, compliance/standards, finance tools, design tools, CRM/ERP, etc.). Include relevant domain/compliance items when present (e.g., HIPAA, PCI-DSS, SOX, GLP, GMP, ISO 26262).
+    - Do NOT include vague phrases or soft statements (“modern backend,” “cloud experience,” “strong communication”).
+    - Prefer atomic names (“Python”, “React”, “AWS Lambda”, “ISO 27001”). Avoid duplicates.
+    - Classify each skill under one of these categories when possible:
+        ["Languages","Frameworks","Web","Mobile","Cloud","Databases","DevOps","Data/AI","Testing","Security","Hardware/Embedded","Design/UX","Product/Analytics","Tools","CRM/ERP","Domain/Compliance","Soft Skills"]
+    - If a skill does not fit any category above, create a new category name that is concise and professional.
+    - Each category should have at most 9 items. If more are found, keep the most role-defining ones.
+    - Output VALID JSON only, schema:
+
+    {
+    "categories": [
+        {"name": "Languages", "skills": ["Python","C++"]},
+        {"name": "Cloud", "skills": ["AWS","AWS Lambda","S3"]},
+        ...
+    ],
+    "flat": ["Python","C++","AWS","AWS Lambda","S3", "..."]
+    }
+
+    Job Description:
+    {{jd_text}}
+    """
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("Please set OPENAI_API_KEY in .env")
+
+    client = OpenAI(api_key=api_key)
+
+    try:
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            response_format={"type": "json_object"},  # force JSON
+        )
+        raw = resp.choices[0].message.content.strip()
+        return json.loads(raw)
+
+    except Exception as e:
+        print("JSON parse failed:", e)
+        return {"error": "LLM response parsing failed"}
 
 
 # ----------- Test -----------

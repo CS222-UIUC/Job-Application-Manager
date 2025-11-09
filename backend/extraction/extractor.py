@@ -11,6 +11,7 @@ import os
 
 import requests
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from openai import OpenAI
 from playwright.sync_api import sync_playwright
 
@@ -130,19 +131,20 @@ def analyze_jd(jd_text: str) -> dict:
     - Each category should have at most 9 items. If more are found, keep the most role-defining ones.
     - Output VALID JSON only, schema:
 
-    {
+    {{
     "categories": [
-        {"name": "Languages", "skills": ["Python","C++"]},
-        {"name": "Cloud", "skills": ["AWS","AWS Lambda","S3"]},
+        {{"name": "Languages", "skills": ["Python","C++"]}},
+        {{"name": "Cloud", "skills": ["AWS","AWS Lambda","S3"]}},
         ...
     ],
-    "flat": ["Python","C++","AWS","AWS Lambda","S3", "..."]
-    }
+    "flat": ["Python","C++","AWS","AWS Lambda","S3"]
+    }}
 
     Job Description:
-    {{jd_text}}
+    {jd_text}
     """
 
+    load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise ValueError("Please set OPENAI_API_KEY in .env")
@@ -166,6 +168,8 @@ def analyze_jd(jd_text: str) -> dict:
 
 # ----------- Test -----------
 if __name__ == "__main__":
-    test_url = "https://allegion.wd5.myworkdayjobs.com/en-US/careers/job/Golden-CO/Summer-Intern---Software-Engineering---Platform-Software_JR33861"
+    test_url = "https://lifeattiktok.com/search/7533023896800495890"
     jd = extract_jd_text(test_url)
     print("First 500 chars:\n", jd[:500])
+    skills = analyze_jd(jd[:10000])
+    print("Extracted skills:\n", json.dumps(skills, indent=2))

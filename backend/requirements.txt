@@ -10,3 +10,5 @@ requests
 beautifulsoup4
 playwright
 lxml
+openai
+python-dotenv

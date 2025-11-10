@@ -15,6 +15,9 @@ function TrackerMain() {
     time: "",
     status: "",
   });
+  const [jdData, setJdData] = useState(null);
+  const [jdLoading, setJdLoading] = useState(false);
+  const [jdError, setJdError] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -116,6 +119,66 @@ function TrackerMain() {
     } catch (error) {
       console.error("Error creating application:", error);
       setMessage("Failed to create application");
+    }
+  };
+
+  const handleFetchJobDescription = async () => {
+    if (!formData.link) {
+      setJdError("Please enter a job posting URL first");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    setJdLoading(true);
+    setJdError("");
+    setJdData(null);
+
+    try {
+      const jdResponse = await fetch("http://localhost:8000/extraction/extract_jd/", {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: formData.link }),
+      });
+
+      if (!jdResponse.ok) {
+        throw new Error("Failed to fetch job description");
+      }
+
+      const jdResult = await jdResponse.json();
+
+      const skillsResponse = await fetch("http://localhost:8000/extraction/extract_skills/", {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: formData.link }),
+      });
+
+      if (!skillsResponse.ok) {
+        throw new Error("Failed to fetch skills");
+      }
+
+      const skillsResult = await skillsResponse.json();
+
+      setJdData({
+        url: skillsResult.url,
+        jobTitle: skillsResult.job_title,
+        company: skillsResult.company,
+        location: skillsResult.location,
+        responsibilities: skillsResult.responsibilities || [],
+        requirements: skillsResult.requirements || [],
+        categories: skillsResult.categories || [],
+        flat: skillsResult.flat || [],
+      });
+    } catch (error) {
+      console.error("Error fetching job description:", error);
+      setJdError("Failed to fetch job description. Please check the URL and try again.");
+    } finally {
+      setJdLoading(false);
     }
   };
 
@@ -268,8 +331,110 @@ function TrackerMain() {
               <button type="submit" className="submit-btn">
                 Add Application
               </button>
+              <button
+                type="button"
+                onClick={handleFetchJobDescription}
+                className="fetch-jd-btn"
+                disabled={jdLoading}
+              >
+                {jdLoading ? "Fetching..." : "Fetch Job Description"}
+              </button>
             </div>
           </form>
+
+          <div className="jd-section">
+            {!jdData && !jdLoading && !jdError && (
+              <p className="jd-placeholder">No job description fetched yet.</p>
+            )}
+
+            {jdLoading && (
+              <div className="jd-loading">
+                <div className="loading-spinner"></div>
+                <p>Fetching job description...</p>
+              </div>
+            )}
+
+            {jdError && (
+              <div className="jd-error">
+                <p>{jdError}</p>
+              </div>
+            )}
+
+            {jdData && !jdLoading && (
+              <div className="jd-card">
+                <div className="jd-header">
+                  <div className="jd-title-block">
+                    <h3 className="jd-position">{jdData.jobTitle}</h3>
+                    <div className="jd-meta">
+                      <span className="jd-company">{jdData.company}</span>
+                      {jdData.location && jdData.location !== "Not specified" && (
+                        <>
+                          <span className="jd-separator">•</span>
+                          <span className="jd-location">{jdData.location}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="jd-content">
+                  <div className="jd-category-block">
+                    <h3 className="jd-category-title">Requirements</h3>
+
+                    {jdData.responsibilities && jdData.responsibilities.length > 0 && (
+                      <div className="jd-summary-section">
+                        <h4 className="jd-summary-label">Responsibilities</h4>
+                        <ul className="jd-bullet-list">
+                          {jdData.responsibilities.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {jdData.requirements && jdData.requirements.length > 0 && (
+                      <div className="jd-summary-section">
+                        <h4 className="jd-summary-label">Qualifications</h4>
+                        <ul className="jd-bullet-list">
+                          {jdData.requirements.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {jdData.categories && jdData.categories.length > 0 && (
+                      <div className="jd-summary-section">
+                        <h4 className="jd-summary-label">Technical Skills</h4>
+                        <div className="jd-skills-by-category">
+                          {jdData.categories.map((category, idx) => (
+                            category.skills && category.skills.length > 0 && (
+                              <div key={idx} className="skill-category-item">
+                                <span className="skill-category-name">{category.name}:</span>
+                                <div className="skill-category-tags">
+                                  {category.skills.map((skill, index) => (
+                                    <span key={index} className="skill-badge">
+                                      {skill}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="jd-footer">
+                    <a href={jdData.url} target="_blank" rel="noopener noreferrer" className="jd-view-link">
+                      View Full Job Posting →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Applications List */}

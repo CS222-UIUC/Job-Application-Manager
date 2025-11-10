@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
@@ -16,16 +16,29 @@ function Profile() {
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeInfo, setResumeInfo] = useState(null);
 
-  useEffect(() => {
+  const loadResumeInfo = useCallback(async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-      return;
+    try {
+      const response = await fetch(
+        "http://localhost:8000/accounts/get-resume/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setResumeInfo(data);
+      }
+    } catch (error) {
+      console.error("Error loading resume info:", error);
     }
-    loadProfile();
-  }, [navigate]);
+  }, []);
 
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     const token = localStorage.getItem("token");
     try {
       setLoading(true);
@@ -37,9 +50,7 @@ function Profile() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile");
-      }
+      if (!response.ok) throw new Error("Failed to fetch profile");
 
       const data = await response.json();
       setUser(data);
@@ -48,8 +59,6 @@ function Profile() {
         last_name: data.last_name || "",
         email: data.email || "",
       });
-      
-      // 加载简历信息
       loadResumeInfo();
     } catch (error) {
       setMessage("Failed to load profile");
@@ -57,27 +66,16 @@ function Profile() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loadResumeInfo]);
 
-  const loadResumeInfo = async () => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    try {
-      const response = await fetch("http://localhost:8000/accounts/get-resume/", {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setResumeInfo(data);
-      }
-    } catch (error) {
-      console.error("Error loading resume info:", error);
+    if (!token) {
+      navigate("/login");
+      return;
     }
-  };
+    loadProfile();
+  }, [navigate, loadProfile]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -116,9 +114,7 @@ function Profile() {
         },
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to upload resume");
-      }
+      if (!response.ok) throw new Error("Failed to upload resume");
 
       setMessage("Resume uploaded successfully");
       setResumeFile(null);
@@ -148,9 +144,7 @@ function Profile() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
+      if (!response.ok) throw new Error("Failed to update profile");
 
       const data = await response.json();
       setUser(data.user || data);
@@ -238,6 +232,7 @@ function Profile() {
               <span className="label">Email:</span>
               <span className="value">{user?.email || "-"}</span>
             </div>
+
             <div className="resume-section">
               <h3>Resume Upload</h3>
               {resumeInfo?.has_resume && (
@@ -245,10 +240,14 @@ function Profile() {
                   <p className="resume-status">✓ Resume uploaded</p>
                   {resumeInfo.uploaded_at && (
                     <p className="resume-date">
-                      Uploaded: {new Date(resumeInfo.uploaded_at).toLocaleDateString()}
+                      Uploaded:{" "}
+                      {new Date(resumeInfo.uploaded_at).toLocaleDateString()}
                     </p>
                   )}
-                  <button className="view-resume-btn" onClick={handleViewResume}>
+                  <button
+                    className="view-resume-btn"
+                    onClick={handleViewResume}
+                  >
                     View Resume
                   </button>
                 </div>
@@ -263,6 +262,7 @@ function Profile() {
                 {resumeInfo?.has_resume ? "Update Resume" : "Upload Resume"}
               </button>
             </div>
+
             <button className="edit-btn" onClick={() => setIsEditing(true)}>
               Edit Profile
             </button>

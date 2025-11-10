@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .models import Item
@@ -29,7 +29,8 @@ def chat(request):
     """Chat with OpenAI API"""
     if not OpenAI:
         return Response(
-            {"error": "OpenAI library is not installed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            {"error": "OpenAI library is not installed"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
     serializer = ChatMessageSerializer(data=request.data)
@@ -43,7 +44,10 @@ def chat(request):
     api_key = getattr(settings, "OPENAI_API_KEY", None)
     if not api_key:
         return Response(
-            {"error": "OpenAI API key is not configured. Please set OPENAI_API_KEY in your environment variables or .env file."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            {
+                "error": "OpenAI API key is not configured. Please set OPENAI_API_KEY in your environment variables or .env file."
+            },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
     try:
@@ -73,5 +77,6 @@ def chat(request):
 
     except Exception as e:
         return Response(
-            {"error": f"Failed to get AI response: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            {"error": f"Failed to get AI response: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

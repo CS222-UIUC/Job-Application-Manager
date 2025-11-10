@@ -31,20 +31,20 @@ def _extract_from_html(html: str, url: str) -> str:
     domain = url.lower()
 
     # Remove unwanted elements
-    for tag in soup.find_all(['script', 'style', 'nav', 'header', 'footer', 'button', 'aside']):
+    for tag in soup.find_all(["script", "style", "nav", "header", "footer", "button", "aside"]):
         tag.decompose()
 
     # Remove elements with common noise classes/ids
     noise_selectors = [
-        {'class': 'navigation'},
-        {'class': 'nav'},
-        {'class': 'menu'},
-        {'class': 'footer'},
-        {'class': 'header'},
-        {'class': 'sidebar'},
-        {'id': 'header'},
-        {'id': 'footer'},
-        {'id': 'navigation'},
+        {"class": "navigation"},
+        {"class": "nav"},
+        {"class": "menu"},
+        {"class": "footer"},
+        {"class": "header"},
+        {"class": "sidebar"},
+        {"id": "header"},
+        {"id": "footer"},
+        {"id": "navigation"},
     ]
     for selector in noise_selectors:
         for element in soup.find_all(attrs=selector):
@@ -118,26 +118,31 @@ def _clean_text(text: str) -> str:
     import re
 
     # Remove Material Icons text patterns
-    text = re.sub(r'\b(expand_more|expand_less|person_outline|location_on|work|attach_money|schedule|keyboard_arrow_down|keyboard_arrow_up)\b', '', text, flags=re.IGNORECASE)
+    text = re.sub(
+        r"\b(expand_more|expand_less|person_outline|location_on|work|attach_money|schedule|keyboard_arrow_down|keyboard_arrow_up)\b",
+        "",
+        text,
+        flags=re.IGNORECASE,
+    )
 
     # Remove excessive whitespace
-    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r"\s+", " ", text)
 
     # Remove button/link noise
     common_noise = [
-        'Skip to main content',
-        'Sign in',
-        'Sign up',
-        'Apply now',
-        'Save job',
-        'Share job',
-        'Cookie policy',
-        'Privacy policy',
-        'Terms of service',
-        'Terms and conditions',
+        "Skip to main content",
+        "Sign in",
+        "Sign up",
+        "Apply now",
+        "Save job",
+        "Share job",
+        "Cookie policy",
+        "Privacy policy",
+        "Terms of service",
+        "Terms and conditions",
     ]
     for noise in common_noise:
-        text = text.replace(noise, '')
+        text = text.replace(noise, "")
 
     return text.strip()
 

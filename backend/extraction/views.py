@@ -62,7 +62,7 @@ def extract_skills(request):
         return Response({"detail": f"Failed to fetch JD: {e}"}, status=status.HTTP_502_BAD_GATEWAY)
 
     try:
-        skills = analyze_jd(jd_text)
+        analysis = analyze_jd(jd_text)
     except Exception as e:
         return Response(
             {"detail": f"Skill analysis failed: {e}"}, status=status.HTTP_502_BAD_GATEWAY
@@ -70,8 +70,13 @@ def extract_skills(request):
 
     out = {
         "url": url,
-        "categories": skills.get("categories", []),
-        "flat": skills.get("flat", []),
+        "job_title": analysis.get("job_title", "Not specified"),
+        "company": analysis.get("company", "Not specified"),
+        "location": analysis.get("location", "Not specified"),
+        "responsibilities": analysis.get("responsibilities", []),
+        "requirements": analysis.get("requirements", []),
+        "categories": analysis.get("categories", []),
+        "flat": analysis.get("flat", []),
         "jd_chars": len(jd_text),
     }
-    return Response(SkillExtractGenericResp(out).data, status=status.HTTP_200_OK)
+    return Response(out, status=status.HTTP_200_OK)

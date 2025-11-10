@@ -134,21 +134,6 @@ function TrackerMain() {
     setJdData(null);
 
     try {
-      const jdResponse = await fetch("http://localhost:8000/extraction/extract_jd/", {
-        method: "POST",
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: formData.link }),
-      });
-
-      if (!jdResponse.ok) {
-        throw new Error("Failed to fetch job description");
-      }
-
-      const jdResult = await jdResponse.json();
-
       const skillsResponse = await fetch("http://localhost:8000/extraction/extract_skills/", {
         method: "POST",
         headers: {

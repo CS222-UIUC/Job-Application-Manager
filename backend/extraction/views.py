@@ -11,7 +11,6 @@ from .extractor import analyze_jd, extract_jd_text
 from .serializers import (
     ExtractRequestSerializer,
     ExtractResponseSerializer,
-    SkillExtractGenericResp,
 )
 
 MAX_JD_CHARS = 10_000

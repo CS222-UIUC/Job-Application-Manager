@@ -56,7 +56,7 @@ def user_logout(request):
     """user logout"""
     try:
         request.user.auth_token.delete()
-    except:
+    except Exception:
         pass
     logout(request)
     return Response({"message": "Logout successful"})
@@ -87,7 +87,7 @@ def change_password(request):
         serializer.save()
         try:
             request.user.auth_token.delete()
-        except:
+        except Exception:
             pass
         return Response({"message": "Password changed successfully"})
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

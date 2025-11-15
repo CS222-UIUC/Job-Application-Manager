@@ -7,7 +7,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     company_name = serializers.CharField(source="job.company.name", read_only=True)
     position = serializers.CharField(source="job.title", read_only=True)
-    company_website = serializers.CharField(source="job.company.website", read_only=True)
+    job_website = serializers.CharField(source="job.website", read_only=True)
     type = serializers.CharField(source="job.get_type_display", read_only=True)
     time = serializers.DateTimeField(source="applied_at", read_only=True)
 

@@ -5,13 +5,13 @@ from .models import Application, Company, Job
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ("name", "website", "created_at")
+    list_display = ("name", "created_at")
     search_fields = ("name",)
 
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ("title", "company", "created_at")
+    list_display = ("title", "website", "company", "created_at")
     search_fields = ("title",)
 
 

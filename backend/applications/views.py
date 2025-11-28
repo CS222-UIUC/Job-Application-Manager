@@ -20,12 +20,14 @@ def get_applications(request):
 def create_application(request):
     try:
         # get or create company
-        company, _ = Company.objects.get_or_create(
-            name=request.data.get("company"), defaults={"website": request.data.get("link", "")}
-        )
+        company, _ = Company.objects.get_or_create(name=request.data.get("company"))
 
         # get or create job
-        job, _ = Job.objects.get_or_create(company=company, title=request.data.get("position"))
+        job, _ = Job.objects.get_or_create(
+            company=company,
+            title=request.data.get("position"),
+            defaults={"website": request.data.get("link", "")},
+        )
 
         # create application
         application = Application.objects.create(

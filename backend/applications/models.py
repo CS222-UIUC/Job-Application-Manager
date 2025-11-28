@@ -13,7 +13,6 @@ class TimeStamped(models.Model):
 # company chart
 class Company(TimeStamped):
     name = models.CharField(max_length=150, unique=True)
-    website = models.URLField(blank=True)
 
     def __str__(self):
         return self.name
@@ -32,6 +31,7 @@ class Job(TimeStamped):
     )
     title = models.CharField(max_length=150)
     type = models.CharField(max_length=20, choices=Status.choices, default=Status.FULL_TIME)
+    website = models.URLField(blank=True)
 
     class Meta:
         unique_together = [("company", "title")]

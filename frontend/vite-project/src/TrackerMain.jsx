@@ -134,14 +134,17 @@ function TrackerMain() {
     setJdData(null);
 
     try {
-      const skillsResponse = await fetch("http://localhost:8000/extraction/extract_skills/", {
-        method: "POST",
-        headers: {
-          Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
+      const skillsResponse = await fetch(
+        "http://localhost:8000/extraction/extract_skills/",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: formData.link }),
         },
-        body: JSON.stringify({ url: formData.link }),
-      });
+      );
 
       if (!skillsResponse.ok) {
         throw new Error("Failed to fetch skills");
@@ -161,7 +164,9 @@ function TrackerMain() {
       });
     } catch (error) {
       console.error("Error fetching job description:", error);
-      setJdError("Failed to fetch job description. Please check the URL and try again.");
+      setJdError(
+        "Failed to fetch job description. Please check the URL and try again.",
+      );
     } finally {
       setJdLoading(false);
     }
@@ -185,6 +190,12 @@ function TrackerMain() {
               className="chat-ai-btn"
             >
               Chat with AI
+            </button>
+            <button
+              onClick={() => navigate("/leetcode")}
+              className="leetcode-btn"
+            >
+              LeetCode
             </button>
             <div
               className="profile-widget"
@@ -352,12 +363,15 @@ function TrackerMain() {
                     <h3 className="jd-position">{jdData.jobTitle}</h3>
                     <div className="jd-meta">
                       <span className="jd-company">{jdData.company}</span>
-                      {jdData.location && jdData.location !== "Not specified" && (
-                        <>
-                          <span className="jd-separator">•</span>
-                          <span className="jd-location">{jdData.location}</span>
-                        </>
-                      )}
+                      {jdData.location &&
+                        jdData.location !== "Not specified" && (
+                          <>
+                            <span className="jd-separator">•</span>
+                            <span className="jd-location">
+                              {jdData.location}
+                            </span>
+                          </>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -366,16 +380,17 @@ function TrackerMain() {
                   <div className="jd-category-block">
                     <h3 className="jd-category-title">Requirements</h3>
 
-                    {jdData.responsibilities && jdData.responsibilities.length > 0 && (
-                      <div className="jd-summary-section">
-                        <h4 className="jd-summary-label">Responsibilities</h4>
-                        <ul className="jd-bullet-list">
-                          {jdData.responsibilities.map((item, index) => (
-                            <li key={index}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                    {jdData.responsibilities &&
+                      jdData.responsibilities.length > 0 && (
+                        <div className="jd-summary-section">
+                          <h4 className="jd-summary-label">Responsibilities</h4>
+                          <ul className="jd-bullet-list">
+                            {jdData.responsibilities.map((item, index) => (
+                              <li key={index}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
 
                     {jdData.requirements && jdData.requirements.length > 0 && (
                       <div className="jd-summary-section">
@@ -392,27 +407,36 @@ function TrackerMain() {
                       <div className="jd-summary-section">
                         <h4 className="jd-summary-label">Technical Skills</h4>
                         <div className="jd-skills-by-category">
-                          {jdData.categories.map((category, idx) => (
-                            category.skills && category.skills.length > 0 && (
-                              <div key={idx} className="skill-category-item">
-                                <span className="skill-category-name">{category.name}:</span>
-                                <div className="skill-category-tags">
-                                  {category.skills.map((skill, index) => (
-                                    <span key={index} className="skill-badge">
-                                      {skill}
-                                    </span>
-                                  ))}
+                          {jdData.categories.map(
+                            (category, idx) =>
+                              category.skills &&
+                              category.skills.length > 0 && (
+                                <div key={idx} className="skill-category-item">
+                                  <span className="skill-category-name">
+                                    {category.name}:
+                                  </span>
+                                  <div className="skill-category-tags">
+                                    {category.skills.map((skill, index) => (
+                                      <span key={index} className="skill-badge">
+                                        {skill}
+                                      </span>
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
-                            )
-                          ))}
+                              ),
+                          )}
                         </div>
                       </div>
                     )}
                   </div>
 
                   <div className="jd-footer">
-                    <a href={jdData.url} target="_blank" rel="noopener noreferrer" className="jd-view-link">
+                    <a
+                      href={jdData.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="jd-view-link"
+                    >
                       View Full Job Posting →
                     </a>
                   </div>

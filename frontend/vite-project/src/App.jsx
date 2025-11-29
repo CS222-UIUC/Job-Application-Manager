@@ -4,6 +4,7 @@ import Login from "./Login.jsx";
 import TrackerMain from "./TrackerMain.jsx";
 import Profile from "./Profile.jsx";
 import ChatAI from "./ChatAI.jsx";
+import LeetCode from "./LeetCode.jsx";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/tracker" element={<TrackerMain />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chat-ai" element={<ChatAI />} />
+        <Route path="/leetcode" element={<LeetCode />} />
       </Routes>
     </BrowserRouter>
   );

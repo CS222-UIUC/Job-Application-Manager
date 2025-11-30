@@ -91,8 +91,9 @@ function Login() {
   // };
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">User Login</h2>
+    <div className="login-page-wrapper">
+      <div className="login-container">
+        <h2 className="login-title">User Login</h2>
 
       {message && (
         <div
@@ -136,6 +137,7 @@ function Login() {
           SignUp
         </button>
         {/* <button className="forgot-btn" onClick={handleForgotPassword}>Forget Password?</button> */}
+      </div>
       </div>
     </div>
   );

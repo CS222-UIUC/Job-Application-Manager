@@ -95,49 +95,49 @@ function Login() {
       <div className="login-container">
         <h2 className="login-title">User Login</h2>
 
-      {message && (
-        <div
-          className="message"
-          style={{
-            padding: "10px",
-            margin: "10px 0",
-            borderRadius: "4px",
-            backgroundColor: message.includes("successful")
-              ? "#d4edda"
-              : "#f8d7da",
-            color: message.includes("successful") ? "#155724" : "#721c24",
-            border: `1px solid ${message.includes("successful") ? "#c3e6cb" : "#f5c6cb"}`,
-          }}
-        >
-          {message}
+        {message && (
+          <div
+            className="message"
+            style={{
+              padding: "10px",
+              margin: "10px 0",
+              borderRadius: "4px",
+              backgroundColor: message.includes("successful")
+                ? "#d4edda"
+                : "#f8d7da",
+              color: message.includes("successful") ? "#155724" : "#721c24",
+              border: `1px solid ${message.includes("successful") ? "#c3e6cb" : "#f5c6cb"}`,
+            }}
+          >
+            {message}
+          </div>
+        )}
+
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="login-input"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="login-input"
+        />
+
+        <div className="button-group">
+          <button className="login-btn" onClick={handleLogin}>
+            Login
+          </button>
+          <button className="register-btn" onClick={handleRegister}>
+            SignUp
+          </button>
+          {/* <button className="forgot-btn" onClick={handleForgotPassword}>Forget Password?</button> */}
         </div>
-      )}
-
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="login-input"
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="login-input"
-      />
-
-      <div className="button-group">
-        <button className="login-btn" onClick={handleLogin}>
-          Login
-        </button>
-        <button className="register-btn" onClick={handleRegister}>
-          SignUp
-        </button>
-        {/* <button className="forgot-btn" onClick={handleForgotPassword}>Forget Password?</button> */}
-      </div>
       </div>
     </div>
   );

@@ -161,6 +161,7 @@ function TrackerMain() {
         requirements: skillsResult.requirements || [],
         categories: skillsResult.categories || [],
         flat: skillsResult.flat || [],
+        leetcodeRecommendations: skillsResult.leetcode_recommendations || [],
       });
     } catch (error) {
       console.error("Error fetching job description:", error);
@@ -429,6 +430,45 @@ function TrackerMain() {
                       </div>
                     )}
                   </div>
+
+                  {jdData.leetcodeRecommendations &&
+                    jdData.leetcodeRecommendations.length > 0 && (
+                      <div className="jd-category-block">
+                        <h3 className="jd-category-title">
+                          LeetCode Recommendation
+                        </h3>
+                        <div className="leetcode-recommendations">
+                          {jdData.leetcodeRecommendations.map(
+                            (problem, index) => (
+                              <div
+                                key={index}
+                                className="leetcode-problem-card"
+                              >
+                                <div className="leetcode-problem-header">
+                                  <a
+                                    href={problem.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="leetcode-problem-title"
+                                  >
+                                    {problem.problem_number}.{" "}
+                                    {problem.problem_name}
+                                  </a>
+                                  <span
+                                    className={`leetcode-difficulty leetcode-difficulty-${problem.difficulty.toLowerCase()}`}
+                                  >
+                                    {problem.difficulty}
+                                  </span>
+                                </div>
+                                <p className="leetcode-problem-reason">
+                                  {problem.reason}
+                                </p>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                   <div className="jd-footer">
                     <a

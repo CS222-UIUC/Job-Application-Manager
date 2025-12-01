@@ -76,6 +76,7 @@ def extract_skills(request):
         "requirements": analysis.get("requirements", []),
         "categories": analysis.get("categories", []),
         "flat": analysis.get("flat", []),
+        "leetcode_recommendations": analysis.get("leetcode_recommendations", []),
         "jd_chars": len(jd_text),
     }
     return Response(out, status=status.HTTP_200_OK)

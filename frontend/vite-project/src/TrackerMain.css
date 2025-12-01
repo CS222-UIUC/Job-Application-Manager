@@ -773,3 +773,77 @@ h1 {
   background-color: #f0f8fc;
   color: #4a8fb4;
 }
+
+.leetcode-recommendations {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 12px;
+}
+
+.leetcode-problem-card {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.leetcode-problem-card:hover {
+  background-color: #ffffff;
+  border-color: #5a9fc4;
+  box-shadow: 0 2px 4px rgba(90, 159, 196, 0.1);
+}
+
+.leetcode-problem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.leetcode-problem-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  flex: 1;
+}
+
+.leetcode-problem-title:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.leetcode-difficulty {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.leetcode-difficulty-easy {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.leetcode-difficulty-medium {
+  background-color: #fed7aa;
+  color: #92400e;
+}
+
+.leetcode-difficulty-hard {
+  background-color: #fecaca;
+  color: #991b1b;
+}
+
+.leetcode-problem-reason {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6b7280;
+  margin: 0;
+}

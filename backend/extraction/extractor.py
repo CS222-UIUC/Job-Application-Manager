@@ -199,7 +199,30 @@ def analyze_jd(jd_text: str) -> dict:
         {{"name": "Languages", "skills": ["Python","Java"]}},
         {{"name": "Cloud", "skills": ["AWS","GCP"]}}
       ],
-      "flat": ["Python","Java","AWS","GCP"]
+      "flat": ["Python","Java","AWS","GCP"],
+      "leetcode_recommendations": [
+        {{
+          "problem_name": "Two Sum",
+          "problem_number": 1,
+          "difficulty": "Easy",
+          "reason": "Tests understanding of hash maps and array traversal, fundamental for backend engineering",
+          "url": "https://leetcode.com/problems/two-sum/"
+        }},
+        {{
+          "problem_name": "Design HashMap",
+          "problem_number": 706,
+          "difficulty": "Easy",
+          "reason": "Relevant for understanding data structure design in system development",
+          "url": "https://leetcode.com/problems/design-hashmap/"
+        }},
+        {{
+          "problem_name": "LRU Cache",
+          "problem_number": 146,
+          "difficulty": "Medium",
+          "reason": "Essential for backend caching mechanisms and performance optimization",
+          "url": "https://leetcode.com/problems/lru-cache/"
+        }}
+      ]
     }}
 
     Rules:
@@ -212,6 +235,24 @@ def analyze_jd(jd_text: str) -> dict:
     - Classify skills under categories: Languages, Frameworks, Web, Mobile, Cloud, Databases, DevOps, Data/AI, Testing, Security, Hardware/Embedded, Design/UX, Tools, CRM/ERP, Domain/Compliance.
     - Each category should have at most 9 items.
     - Focus on the most important and role-defining information.
+
+    LeetCode Recommendations Rules:
+    - Recommend EXACTLY 3 LeetCode problems that are most relevant to this specific job role.
+    - Choose problems based on the technical skills, requirements, and responsibilities mentioned in the JD.
+    - Mix difficulty levels appropriately (e.g., 1 Easy, 1 Medium, 1 Hard or 2 Medium, 1 Hard depending on seniority).
+    - For each problem, provide:
+      * problem_name: The exact LeetCode problem title
+      * problem_number: The LeetCode problem number
+      * difficulty: "Easy", "Medium", or "Hard"
+      * reason: A brief explanation (one sentence) of why this problem is relevant to the job
+      * url: The full LeetCode problem URL in format https://leetcode.com/problems/problem-slug/
+    - Examples of relevant mappings:
+      * Backend/API roles: System Design, Database, Caching problems
+      * Frontend roles: DOM manipulation, React patterns, State management
+      * Data Engineer: Array processing, Graph traversal, Dynamic Programming
+      * ML Engineer: Matrix operations, Optimization, Statistical algorithms
+      * Full Stack: Mix of frontend and backend relevant problems
+
     - Output VALID JSON only.
 
     Job Description:
@@ -229,7 +270,7 @@ def analyze_jd(jd_text: str) -> dict:
         resp = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0,
+            temperature=0.2,
             response_format={"type": "json_object"},
         )
         raw = resp.choices[0].message.content.strip()
@@ -245,5 +286,18 @@ if __name__ == "__main__":
     test_url = "https://lifeattiktok.com/search/7533023896800495890"
     jd = extract_jd_text(test_url)
     print("First 500 chars:\n", jd[:500])
-    skills = analyze_jd(jd[:10000])
-    print("Extracted skills:\n", json.dumps(skills, indent=2))
+
+    result = analyze_jd(jd[:10000])
+
+    print("\n=== Job Analysis ===")
+    print(f"Title: {result.get('job_title')}")
+    print(f"Company: {result.get('company')}")
+    print(f"\nSkills: {result.get('flat')}")
+
+    print("\n=== LeetCode Recommendations ===")
+    for i, problem in enumerate(result.get("leetcode_recommendations", []), 1):
+        print(
+            f"\n{i}. {problem['problem_name']} (#{problem['problem_number']}) - {problem['difficulty']}"
+        )
+        print(f"   Reason: {problem['reason']}")
+        print(f"   URL: {problem['url']}")

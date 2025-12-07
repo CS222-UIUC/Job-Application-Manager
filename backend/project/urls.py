@@ -28,6 +28,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("applications/", include("applications.urls")),
     path("extraction/", include("extraction.urls")),
+    path("leetcode/", include("leetcode.urls")),
 ]
 
 # Serve media files in development

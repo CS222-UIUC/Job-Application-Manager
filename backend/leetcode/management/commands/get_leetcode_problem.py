@@ -2,14 +2,15 @@ import json
 from pathlib import Path
 
 from django.core.management.base import BaseCommand
-from leetcode_progress.models import LeetCodeProblem
+
+from leetcode.models import LeetCodeProblem
 
 
 class Command(BaseCommand):
     help = "Load LeetCode problems from local JSON file"
 
     def handle(self, *args, **options):
-        data_path = Path("backend/leetcode_first_3758.json")
+        data_path = Path(__file__).resolve().parents[3] / "leetcode_first_3758.json"
 
         with open(data_path, "r", encoding="utf-8") as f:
             problems = json.load(f)
@@ -20,7 +21,7 @@ class Command(BaseCommand):
         created, updated = 0, 0
 
         for idx, p in enumerate(problems):
-            problem_id = total - idx # the json file is in reverse order
+            problem_id = total - idx  # the json file is in reverse order
 
             obj, was_created = LeetCodeProblem.objects.update_or_create(
                 problem_id=problem_id,
@@ -37,6 +38,6 @@ class Command(BaseCommand):
             else:
                 updated += 1
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Loaded {total} problems ({created} created, {updated} updated)"
-        ))
+        self.stdout.write(
+            self.style.SUCCESS(f"Loaded {total} problems ({created} created, {updated} updated)")
+        )

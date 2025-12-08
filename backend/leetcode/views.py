@@ -5,24 +5,23 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import LeetCodeRecord
-from .serializers import LeetCodeRecordSerializer
+# from .models import LeetCodeRecord
+# from .serializers import LeetCodeRecordSerializer
 
+# class LeetCodeRecordViewSet(viewsets.ModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = LeetCodeRecordSerializer
 
-class LeetCodeRecordViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = LeetCodeRecordSerializer
+#     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+#     filterset_fields = ["difficulty", "status"]
+#     search_fields = ["title", "problem_id", "tags"]
+#     ordering_fields = ["solved_at", "updated_at", "time_spent_min"]
 
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ["difficulty", "status"]
-    search_fields = ["title", "problem_id", "tags"]
-    ordering_fields = ["solved_at", "updated_at", "time_spent_min"]
+#     def get_queryset(self):
+#         return LeetCodeRecord.objects.filter(user=self.request.user)
 
-    def get_queryset(self):
-        return LeetCodeRecord.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
 
 
 @api_view(["GET"])

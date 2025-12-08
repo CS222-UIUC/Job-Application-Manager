@@ -19,7 +19,7 @@ class UserProblemRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProblemRecord
-        fields = ["problem", "solved_at"]
+        fields = ["problem", "problem_id", "solved_at"]
 
     def create(self, validated_data):
         return super().create(validated_data)

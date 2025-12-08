@@ -17,8 +17,12 @@ class UserProblemRecordViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # return user records
-        return UserProblemRecord.objects.filter(user=self.request.user).select_related("problem")
+        # return user records, ordered by problem_id
+        return (
+            UserProblemRecord.objects.filter(user=self.request.user)
+            .select_related("problem")
+            .order_by("problem__problem_id")
+        )
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

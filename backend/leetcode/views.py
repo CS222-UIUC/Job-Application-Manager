@@ -1,89 +1,27 @@
-import requests
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, status, viewsets
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework import permissions, viewsets
 
-# from .models import LeetCodeRecord
-# from .serializers import LeetCodeRecordSerializer
-
-# class LeetCodeRecordViewSet(viewsets.ModelViewSet):
-#     permission_classes = [permissions.IsAuthenticated]
-#     serializer_class = LeetCodeRecordSerializer
-
-#     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-#     filterset_fields = ["difficulty", "status"]
-#     search_fields = ["title", "problem_id", "tags"]
-#     ordering_fields = ["solved_at", "updated_at", "time_spent_min"]
-
-#     def get_queryset(self):
-#         return LeetCodeRecord.objects.filter(user=self.request.user)
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
+from .models import LeetCodeProblem, UserProblemRecord
+from .serializers import LeetCodeProblemSerializer, UserProblemRecordSerializer
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_leetcode_problem(request, problem_number):
-    try:
-        # LeetCode GraphQL API
-        query = """
-        query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {
-          problemsetQuestionList: questionList(
-            categorySlug: $categorySlug
-            limit: $limit
-            skip: $skip
-            filters: $filters
-          ) {
-            questions: data {
-              questionId
-              title
-              titleSlug
-              difficulty
-              topicTags {
-                name
-              }
-            }
-          }
-        }
-        """
+class LeetCodeProblemViewSet(viewsets.ReadOnlyModelViewSet):
 
-        variables = {"categorySlug": "", "skip": problem_number - 1, "limit": 1, "filters": {}}
+    queryset = LeetCodeProblem.objects.all().order_by("problem_id")
+    serializer_class = LeetCodeProblemSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-        response = requests.post(
-            "https://leetcode.com/graphql",
-            json={"query": query, "variables": variables},
-            headers={"Content-Type": "application/json"},
-        )
 
-        data = response.json()
+class UserProblemRecordViewSet(viewsets.ModelViewSet):
 
-        if data.get("data") and data["data"]["problemsetQuestionList"]["questions"]:
-            problem = data["data"]["problemsetQuestionList"]["questions"][0]
+    serializer_class = UserProblemRecordSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-            # Verify if the problem number matches
-            if int(problem["questionId"]) != problem_number:
-                return Response(
-                    {"error": f"Problem #{problem_number} not found"},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+    def get_queryset(self):
+        # return user records
+        return UserProblemRecord.objects.filter(user=self.request.user).select_related("problem")
 
-            return Response(
-                {
-                    "number": int(problem["questionId"]),
-                    "name": problem["title"],
-                    "slug": problem["titleSlug"],
-                    "difficulty": problem["difficulty"],
-                    "topics": [tag["name"] for tag in problem["topicTags"]],
-                    "url": f"https://leetcode.com/problems/{problem['titleSlug']}/",
-                }
-            )
-        else:
-            return Response(
-                {"error": f"Problem #{problem_number} not found"}, status=status.HTTP_404_NOT_FOUND
-            )
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)

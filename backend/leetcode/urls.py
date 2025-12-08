@@ -1,7 +1,12 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-from . import views
+from .views import LeetCodeProblemViewSet, UserProblemRecordViewSet
+
+router = DefaultRouter()
+router.register("problems", LeetCodeProblemViewSet, basename="leetcode-problem")
+router.register("records", UserProblemRecordViewSet, basename="leetcode-record")
 
 urlpatterns = [
-    path("problem/<int:problem_number>/", views.get_leetcode_problem, name="get_leetcode_problem"),
+    path("", include(router.urls)),
 ]

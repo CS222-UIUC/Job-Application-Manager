@@ -1,21 +1,45 @@
 from django.conf import settings
 from django.db import models
 
-class LeetCodeRecord(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="leetcode_records")
-    problem_id = models.CharField(max_length=64)          # 如 1, 2, 3 或 slug
-    title = models.CharField(max_length=255)
+
+class LeetCodeProblem(models.Model):
+    """
+    Problem Info
+    """
+
+    problem_id = models.PositiveIntegerField(primary_key=True)  # LeetCode problem ID
+    title = models.CharField(max_length=255)  # problem title
+    difficulty = models.CharField(
+        max_length=10,
+        choices=[("Easy", "Easy"), ("Medium", "Medium"), ("Hard", "Hard")],
+    )
+    tags = models.JSONField(default=list, blank=True)
     url = models.URLField(blank=True)
-    difficulty = models.CharField(max_length=16, choices=[("easy","easy"),("medium","medium"),("hard","hard")])
-    status = models.CharField(max_length=16, choices=[("solved","solved"),("attempted","attempted")], default="solved")
-    language = models.CharField(max_length=64, blank=True) # Python/Java/C++ 等
-    tags = models.JSONField(default=list, blank=True)      # sqlite 可用 JSONField
-    time_spent_min = models.PositiveIntegerField(default=0)
-    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.difficulty})"
+
+
+class UserProblemRecord(models.Model):
+    """
+    User's record for a specific problem
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="leetcode_records",
+    )
+    problem = models.ForeignKey(
+        LeetCodeProblem,
+        on_delete=models.CASCADE,
+        related_name="user_records",
+    )
+
     solved_at = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ("user", "problem_id")
-        ordering = ["-solved_at", "-updated_at"]
+        unique_together = ("user", "problem")
+
+    def __str__(self):
+        return f"{self.user} - {self.problem}"

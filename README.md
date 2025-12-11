@@ -1,4 +1,12 @@
 # Job Application Management System  
+
+![Docker](https://img.shields.io/badge/Docker-dev%20env-2496ED)
+![React](https://img.shields.io/badge/React-frontend-green)
+![JavaScript](https://img.shields.io/badge/JavaScript-frontend-green)
+![Django](https://img.shields.io/badge/Django-backend-blue)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![black](https://img.shields.io/badge/code%20style-black-000000)
+
 *A Smart Application Tracking & Skill Recommendation Platform*
 
 ## Introduction  
@@ -82,9 +90,9 @@ And the backend database at http://localhost:8000/admin/ (using your own account
 
 ## Members
 
-| Name             | Role                     | Responsibilities                                                |
-| ---------------- | ------------------------ | --------------------------------------------------------------- |
-| **Zhijian Yang** | Full-stack + Integration | Connect React & Django, assist backend, deployment, using API   |
-| **William Lu**   | Backend                  | Models, authentication, AI recommendation, leetcode             |
-| **Liyuan Lu**    | Backend                  | Resume upload, REST API endpoints, database schema              |
-| **Yantao Lin**   | Frontend                 | UI components, dashboard, forms, login page                     |
+| Name             | Github | Role                     | Responsibilities                                                |
+| ---------------- | -------------- | ------------------------ | --------------------------------------------------------------- |
+| **Zhijian Yang** | [<img src="https://github.com/yangzhijiany.png" width="40"/>](https://github.com/yangzhijiany) | Full-stack + Integration | Connect React & Django, assist backend, deployment, using API   |
+| **William Lu**   | [<img src="https://github.com/William-f-12.png" width="40"/>](https://github.com/William-f-12) | Backend                  | Models, authentication, AI recommendation, leetcode             |
+| **Liyuan Lu**    | [<img src="https://github.com/LiyuanLu0529.png" width="40"/>](https://github.com/LiyuanLu0529) | Backend                  | Resume upload, REST API endpoints, database schema              |
+| **Yantao Lin**   | [<img src="https://github.com/ytLin27.png" width="40"/>](https://github.com/ytLin27) | Frontend                 | UI components, dashboard, forms, login page                     |

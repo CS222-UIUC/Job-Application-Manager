@@ -1,4 +1,4 @@
-# Job Application Management System  
+# Job Application Manager
 
 ![Docker](https://img.shields.io/badge/Docker-dev%20env-2496ED)
 ![React](https://img.shields.io/badge/React-frontend-green)
@@ -10,7 +10,7 @@
 *A Smart Application Tracking & Skill Recommendation Platform*
 
 ## Introduction  
-Our **Job Application Management System** is a full-stack web platform that helps users organize their job search and application process. Job seekers often lose track of deadlines, stages, and required skill requirements across many platforms. Our application allows users to:
+Our **Job Application Manager** is a full-stack web platform that helps users organize their job search and application process. Job seekers often lose track of deadlines, stages, and required skill requirements across many platforms. Our application allows users to:
 
 - Track various applications on a centralized dashboard
 - Get suggestions by AI on skills to practice
@@ -50,8 +50,8 @@ Motivation: Searching for jobs is overwhelming. We wanted to build a tool that *
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/CS222-UIUC/fa25-fa25-team39.git
-cd fa25-fa25-team39
+git clone https://github.com/CS222-UIUC/Job-Application-Manager.git
+cd Job-Application-Manager
 ```
 
 ### 2. Setup environment variable

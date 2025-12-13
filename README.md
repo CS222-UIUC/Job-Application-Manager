@@ -65,7 +65,9 @@ cp .env.example .env
 docker-compose up --build
 ```
 
-You may need to setup the database and create superuser for the first time
+Now you should be able to use the app (see step 4).
+
+If it doesn't work, you may need to setup the database for the first time
 ```bash
 # In another terminal:
 # setup database
@@ -73,14 +75,17 @@ You may need to setup the database and create superuser for the first time
 docker compose exec backend python manage.py migrate
 # - upload the first 3758 leetcode problems
 docker compose exec backend python manage.py get_leetcode_problem
-
-# create superuser by this command, following the instruction
-docker compose exec backend createsuperuser
 ```
 
 You can check if both backend and frontend are running using the command
 ```bash
 docker-compose ps
+```
+
+Also, if you want to manage the backend database, you may need to create superuser.
+```bash
+# create superuser by this command, following the instruction
+docker compose exec backend createsuperuser
 ```
 
 ### 4. Using the website

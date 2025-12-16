@@ -28,23 +28,37 @@ Motivation: Searching for jobs is overwhelming. We wanted to build a tool that *
 
 ### System Overview
 
-![System Overview Diagram](assets/architecture.png)
-
-### Backend
-**Functionalities**: The backend is responsible for managing user data, authentication, file uploads, and AI-powered recommendations.
-
-**Programming Lan**: We built the backend using Python with the Django framework, as two team members are already familiar with Python. And we learned Django, a framework that is good for rapid development, scalability, and security.
-
-**Interactions with frontend**: The backend communicates with the frontend through Django REST Framework. This method ensures a clean client–server separation and makes the project modular and easier to scale.
-
+<p align="center">
+  <img src="assets/architecture.png" width="60%">
+</p>
 
 ### Frontend
-**Functionalities**: The frontend provides the user interface for interacting with the system (UI and form to create application/upload resume). 
+**Functionalities**: Displays UI, Manages application list and forms, Handles login and profile pages
 
-**Programming Lan**: The frontend is implemented with React, JavaScript, HTML, and CSS.
+**Interaction**: Sends requests to backend via HTTP (REST API) such as create, update, read. Get the JSON response from backend
 
-**Interactions with backend**: The frontend sends HTTP requests to backend APIs to retrieve and update data. This client-server communication method keeps the UI decoupled from backend logic and simplifies integration.
+**Language/Library**: React, Vite, Javascript, CSS
 
+### Backend
+**Functionalities**: Authentication, CRUD for applications, Resume upload handling
+
+**Interaction**: Get HTTP request from frontend and send response in JSON; Use Django ORM to communicate with SQLite Database; Send prompt to AI via OpenAI API to get response
+
+**Language/Library**: Django, Python
+
+### AI
+**Functionalities**: Extracts keywords from job description, Calls OpenAI API for skill suggestions, Returns recommended skills and LeetCode topics
+
+**Interaction**: Get Job Description and Prompt from backend via OpenAI API
+
+**Language/Library**: OpenAI, Python
+
+### AI
+**Functionalities**: Stores user accounts, Stores job application info, Stores LeetCode problem info
+
+**Interaction**: The backend performs CRUD operations using Django ORM
+
+**Language/Library**: SQLite, Django ORM
 
 ## Installation Instruction
 

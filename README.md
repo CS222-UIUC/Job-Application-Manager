@@ -53,7 +53,7 @@ Motivation: Searching for jobs is overwhelming. We wanted to build a tool that *
 
 **Language/Library**: OpenAI, Python
 
-### AI
+### Database
 **Functionalities**: Stores user accounts, Stores job application info, Stores LeetCode problem info
 
 **Interaction**: The backend performs CRUD operations using Django ORM
